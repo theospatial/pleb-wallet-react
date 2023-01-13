@@ -31,7 +31,7 @@ const PaymentsModal = ({ modalState, setModalState }) => {
         e.preventDefault();
      
         const headers = {
-          "X-Api-Key": "25621ccd59de4d50b22f953136de8477",
+          "X-Api-Key": "002ff7815edf4bedb1d1589935217f7c",
         };
         const data = {
           bolt11: formData.invoiceToPay,
