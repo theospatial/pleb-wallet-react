@@ -72,6 +72,26 @@ const PaymentsModal = ({ modalState, setModalState }) => {
         return;
       };
          
+    // Function to clear all of our state when we close the modal
+    const clearForms = () => {
+        setModalState({
+        type: "",
+        open: false,
+        });
+        setInvoice("");
+        setPaymentInfo({
+        paymentHash: "",
+        checkingId: "",
+        });
+        setFormData({
+        amount: 0,
+        invoiceToPay: "",
+        });
+    };
+    
+    
+ 
+
 
  return (
     <Modal
@@ -80,14 +100,16 @@ const PaymentsModal = ({ modalState, setModalState }) => {
     contentLabel="Example Modal"
     appElement={document.getElementById("root")}
   >
+    {/* Close forms button */}
     <p
-      className="close-button"
-      onClick={() => {
-        setModalState({ open: false, type: null });
-      }}
+        className="close-button"
+        onClick={() => {
+            clearForms();
+        }}
     >
-      X
+        X
     </p>
+
     {/* If it is a send */}
     {modalState.type === "send" && (
       <form>
