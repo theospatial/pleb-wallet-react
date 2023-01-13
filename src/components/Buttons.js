@@ -23,7 +23,7 @@ export const Buttons = () => {
        <button
          className="button"
          onClick={() =>
-            setModalState({ type: "recieve", open: "true"})
+            setModalState({ type: "receive", open: "true"})
         }
        >
          Receive
