@@ -26,10 +26,52 @@ const PaymentsModal = ({ modalState, setModalState }) => {
         checkingId: "",
     });
     
-    const handleSend = () => {};
-    
-    const handleReceive = () => {};
-    
+    const handleSend = (e) => {
+        // Keep the page from refreshing when the form is submitted
+        e.preventDefault();
+     
+        const headers = {
+          "X-Api-Key": "25621ccd59de4d50b22f953136de8477",
+        };
+        const data = {
+          bolt11: formData.invoiceToPay,
+          out: true,
+        };
+        axios
+          .post("https://legend.lnbits.com/api/v1/payments", data, { headers })
+          .then((res) =>
+            setPaymentInfo({
+              paymentHash: res.data.payment_hash,
+              checkingId: res.data.checking_id,
+            })
+          )
+          .catch((err) => console.log(err));
+     
+        return;
+      };
+     
+         
+      const handleReceive = (e) => {
+        // Keep the page from refreshing when the form is submitted
+        e.preventDefault();
+     
+        const headers = {
+          "X-Api-Key": "25621ccd59de4d50b22f953136de8477",
+        };
+        const data = {
+          amount: formData.amount,
+          out: false,
+          // ToDo: Add additional form for user to be able to customize the memo
+          memo: "LNBits",
+        };
+        axios
+          .post("https://legend.lnbits.com/api/v1/payments", data, { headers })
+          .then((res) => setInvoice(res.data.payment_request))
+          .catch((err) => console.log(err));
+     
+        return;
+      };
+         
 
  return (
     <Modal
