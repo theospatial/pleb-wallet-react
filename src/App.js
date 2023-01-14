@@ -3,6 +3,7 @@ import './App.css';
 import axios from "axios";
 import Transactions from "./components/Transactions";
 import Buttons from "./components/Buttons";
+import Chart from "./components/Chart";
 
 
 
@@ -12,6 +13,7 @@ function App() {
   const [moscow, setMoscow] = useState(0);
   const [balance, setBalance] = useState(null);
   const [transactions, setTransactions] = useState([]);
+  const [chartData, setChartData] = useState(null);
   
   //() => {};
   //callback function: call it and pass in another function
@@ -23,6 +25,7 @@ function App() {
       .then((res) => {
         setPrice(res.data.data.amount);
         setMoscow(Math.floor(1/(res.data.data.amount*0.00000001)));
+        updateChartData(res.data.data.amount);
       })
       //.catch is a promise that will run if the API call fails (handle async)
       .catch((err) => {
@@ -56,6 +59,37 @@ function App() {
       })
       .catch((err) => console.log(err));
   };
+
+  const updateChartData = (currentPrice) => {
+    const timestamp = Date.now();
+        // We are able to grab the previous state to look at it and do logic before adding new data to it
+    setChartData((prevState) => {
+      // If we have no previous state, create a new array with the new price data
+      if (!prevState)
+        return [
+          {
+            x: timestamp,
+            y: Number(currentPrice),
+          },
+        ];
+      // If the timestamp or price has not changed, we don't want to add a new point
+      if (
+        prevState[prevState.length - 1].x === timestamp ||
+        prevState[prevState.length - 1].y === Number(currentPrice)
+      )
+        return prevState;
+      // If we have previous state than keep it and add the new price data to the end of the array
+      return [
+        // Here we use the "spread operator" to copy the previous state
+        ...prevState,
+        {
+          x: timestamp,
+          y: Number(currentPrice),
+        },
+      ];
+    });
+  };
+
 
   useEffect(() => {
     getPrice();
@@ -91,10 +125,12 @@ function App() {
        </div>
      </div>
      <div className="row">
-       <div className="row-item">
-         <Transactions transactions = { transactions }/>
-       </div>
-       <div className="row-item">{/* <Chart chartData={chartData} /> */}</div>
+      <div className="row-item">
+        <Transactions transactions = { transactions }/>
+      </div>
+      <div className="row-item">{
+        <Chart chartData={chartData} />
+      }</div>
      </div>
      <footer>
        <p>Made by plebs, for plebs.</p>
